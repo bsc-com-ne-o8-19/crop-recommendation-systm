@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Predict</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='style/predict.css')}}"
+    />
+  </head>
+  <body>
+    <main class="predict-background">
+      <h1>Predict</h1>
+      <form
+        action="/predict"
+        method="post"
+        class="design"
+        class="input-container"
+      >
+        <p><label for="phosphorus">Phosphorus</label></p>
+
+        <div>
+          <input
+            type="text"
+            id="phosphorus"
+            name="phosphorus"
+            placeholder="Enter phosphorus"
+          />
+        </div>
+
+        <p><label for="nitrogen">Nitrogen</label></p>
+        <div>
+          <input type="text" id="nitrogen" placeholder="Enter nitrogen" />
+        </div>
+
+        <p><label for="potassium">Potassium</label></p>
+        <div>
+          <input
+            type="text"
+            id="potassium"
+            name="potassium"
+            placeholder="Enter potassium"
+          />
+        </div>
+
+        <p><label for="rainfall">Rainfall</label></p>
+        <div>
+          <input
+            type="text"
+            id="rainfall"
+            name="rainfall"
+            placeholder="Enter rainfall"
+          />
+        </div>
+
+        <p><label for="temperature">Temperature</label></p>
+        <div>
+          <input
+            type="text"
+            id="temperature"
+            name="temperature"
+            placeholder="Enter temperature"
+          />
+        </div>
+
+        <p><label for="humidity">Humidity</label></p>
+        <div>
+          <input
+            type="text"
+            id="humidity"
+            name="humidity"
+            placeholder="Enter humidity"
+          />
+        </div>
+      </form>
+      <br />
+      <button type="submit" class="predict-button">Predict</button>
+    </main>
+  </body>
+</html>
