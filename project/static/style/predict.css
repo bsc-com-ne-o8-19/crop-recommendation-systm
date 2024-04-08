@@ -1,0 +1,75 @@
+/* Predict page styling */
+
+/* Default background color */
+body {
+  font-family: "Arial", sans-serif;
+  color: #333;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  background-size: cover;
+  background-position: center;
+  background: radial-gradient(
+    848px at 10% 20%,
+    rgba(174, 231, 165, 0.9) 0%,
+    rgb(163, 185, 138) 90%
+  );
+}
+
+/*.predict-background {
+  background-image: url("/static/style/predict_background.jpg"); /* Path to your background image */
+/*background-size: cover;
+  background-position: center;}*/
+
+.input-container {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+label {
+  font-weight: bold;
+  color: #006400;
+  padding: 2px;
+  font-size: larger;
+}
+.design {
+  text-align: center;
+}
+
+input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 20%;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* Predict button style */
+.predict-button {
+  background-color: #006400;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+.predict-button:hover {
+  background-color: #4b774b;
+  transition: 200ms ease-in-out;
+}
+h1 {
+  text-align: center;
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+button {
+  margin: 0 auto;
+  display: block;
+}
+p {
+  margin-bottom: 0px;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Soil Analysis And Crop Recommendation System</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='style/myhome.css')}}"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li class="left-corner"><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="#">Services</a></li>
+          <li class="right-corner"><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>Soil Analysis And Crop Recommendation System</h1>
+      <p class="welcome-text">
+        Welcome to Soil Analysis And Crop Recommendation System.
+      </p>
+      <p class="about-text"></p>
+      <form action="/predict" method="get">
+        <button type="submit" class="start-button">Start Soil Analysis</button>
+      </form>
+    </main>
+  </body>
+</html>
