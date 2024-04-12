@@ -12,13 +12,13 @@ def about():
     return about_text
 
 
-@app.route('/contact')
-def contact():
+@app.route('/Help')
+def help():
     contact_info = {
         'telephone': '+265881401065',
-        'email': 'mufa@gmail.com'
+        'email': 'croprecommendation@gmail.com'
     }
-    return render_template('contact.html', contact_info=contact_info)
+    return render_template('Help.html', contact_info=contact_info)
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
