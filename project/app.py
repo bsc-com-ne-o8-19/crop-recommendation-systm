@@ -1,6 +1,31 @@
+
+import joblib
+
 from flask import Flask, render_template, request, redirect, url_for
 
+
 app = Flask(__name__)
+
+def predict_crops_with_alternatives(input_features, n_alternatives=2):
+    # Load the trained model
+    # model = joblib.load('crop_recommendation_model.pkl')
+    model = joblib.load('crop_app','r')
+    
+    # Predict probabilities for each class
+    probabilities = model.predict_proba([input_features])[0]
+    
+    # Get the index and probability of the top prediction (best crop)
+    best_crop_index = probabilities.argmax()
+    best_crop = model.classes_[best_crop_index]
+    best_crop_probability = probabilities[best_crop_index]
+    
+    # Exclude the best crop and get the next best alternatives along with their probabilities
+    probabilities[best_crop_index] = 0  # Exclude best crop from alternatives
+    alternatives_indices = probabilities.argsort()[-n_alternatives:][::-1]  # Indices of the best alternatives
+    alternative_crops = [(model.classes_[i], probabilities[i]) for i in alternatives_indices if probabilities[i] > 0]
+    
+    return best_crop, best_crop_probability, alternative_crops
+
 
 @app.route('/')
 def home():
@@ -20,11 +45,30 @@ def help():
     }
     return render_template('Help.html', contact_info=contact_info)
 
-@app.route('/predict', methods=['GET', 'POST'])
+@app.route('/predict')
 def predict():
-    if request.method == 'POST':
-        return redirect(url_for('home')) 
-    return render_template('predict.html')
+        return render_template('predict.html')
+
+@app.route('/form', methods=["POST"])
+def form_handler():
+    # Extract form data
+    Nitrogen = float(request.form['Nitrogen'])
+    Phosphorus = float(request.form['Phosphorus'])
+    Potassium = float(request.form['Potassium'])
+    Temperature = float(request.form['Temperature'])
+    Ph = float(request.form['ph'])
+  
+     
+    values = [Nitrogen, Phosphorus, Potassium, Temperature, Ph]
+    
+    if Ph > 0 and Ph <= 14 and Temperature < 100 :
+        best_crop, best_crop_probability, alternative_crops = predict_crops_with_alternatives(values)
+        # Passing both the best crop and alternatives to the template
+        return render_template('prediction.html', best_crop=best_crop, best_crop_probability=best_crop_probability, alternatives=alternative_crops)
+    else:
+        return "Sorry... Error in entered values in the form. Please check the values and fill it again."
+
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
