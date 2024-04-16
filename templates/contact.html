@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Contact Us</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='style/contact.css')}}"
+    />
+  </head>
+  <body>
+    <h1>Contact Us</h1>
+    <p>Phone: {{ contact_info.telephone }}</p>
+    <p>Email: {{ contact_info.email }}</p>
+  </body>
+</html>
