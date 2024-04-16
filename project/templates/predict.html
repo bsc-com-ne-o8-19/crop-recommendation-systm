@@ -11,55 +11,54 @@
   <body>
     <main class="predict-background">
       <h1>Predict</h1>
-      <form
-        action="/predict"
-        method="post"
-        class="design"
-        class="input-container"
-      >
-        <p><label for="phosphorus">Phosphorus</label></p>
+      <form action="/form" method="POST" class="design" class="input-container">
+        <p><label for="Nitrogen">Nitrogen</label></p>
+        <div>
+          <input
+            type="text"
+            id="Nitrogen"
+            placeholder="Enter Nitrogen"
+            name="Nitrogen"
+          />
+        </div>
+
+        <p><label for="Phosphorus">Phosphorus</label></p>
 
         <div>
           <input
             type="text"
-            id="phosphorus"
-            name="phosphorus"
-            placeholder="Enter phosphorus"
+            id="Phosphorus"
+            name="Phosphorus"
+            placeholder="Enter Phosphorus"
           />
         </div>
 
-        <p><label for="nitrogen">Nitrogen</label></p>
-        <div>
-          <input type="text" id="nitrogen" placeholder="Enter nitrogen" />
-        </div>
-
-        <p><label for="potassium">Potassium</label></p>
+        <p><label for="Potassium">Potassium</label></p>
         <div>
           <input
             type="text"
-            id="potassium"
-            name="potassium"
-            placeholder="Enter potassium"
+            id="Potassium"
+            name="Potassium"
+            placeholder="Enter Potassium"
           />
         </div>
 
-        <p><label for="temperature">Temperature</label></p>
+        <p><label for="Temperature">Temperature</label></p>
         <div>
           <input
             type="text"
-            id="temperature"
-            name="temperature"
-            placeholder="Enter temperature"
+            id="Temperature"
+            name="Temperature"
+            placeholder="Enter Temperature"
           />
         </div>
-
         <p><label for="pH">pH</label></p>
         <div>
-          <input type="text" id="pH" name="pH" placeholder="Enter Soil pH" />
+          <input type="text" id="pH" name="pH" placeholder="Enter pH" />
         </div>
+        <input type="submit" class="predict-button" id="Predict" />
       </form>
       <br />
-      <button type="submit" class="predict-button">Predict</button>
     </main>
   </body>
 </html>

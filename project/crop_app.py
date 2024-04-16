@@ -1,14 +1,10 @@
-
 import joblib
-
-from flask import Flask, render_template, request, redirect, url_for
-
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
 def predict_crops_with_alternatives(input_features, n_alternatives=2):
     # Load the trained model
-    # model = joblib.load('crop_recommendation_model.pkl')
     model = joblib.load('crop_app','r')
     
     # Predict probabilities for each class
@@ -26,28 +22,13 @@ def predict_crops_with_alternatives(input_features, n_alternatives=2):
     
     return best_crop, best_crop_probability, alternative_crops
 
-
 @app.route('/')
 def home():
-    return render_template('home.html')
-
-@app.route('/about')
-def about():
-    about_text = """Our system integrates advanced soil analysis techniques with sophisticated crop recommendation algorithms to provide tailored guidance to farmers. By analyzing soil composition, nutrient levels, and environmental factors, we deliver personalized recommendations for crop selection, fertilization, irrigation, and pest management."""
-    return about_text
-
-
-@app.route('/Help')
-def help():
-    contact_info = {
-        'telephone': '+265881401065',
-        'email': 'croprecommendation@gmail.com'
-    }
-    return render_template('Help.html', contact_info=contact_info)
+    return render_template('Home.html')
 
 @app.route('/predict')
-def predict():
-        return render_template('predict.html')
+def prediction():
+    return render_template('predict.html')
 
 @app.route('/form', methods=["POST"])
 def form_handler():
@@ -56,19 +37,16 @@ def form_handler():
     Phosphorus = float(request.form['Phosphorus'])
     Potassium = float(request.form['Potassium'])
     Temperature = float(request.form['Temperature'])
-    Ph = float(request.form['ph'])
-  
+    pH = float(request.form['pH'])
      
-    values = [Nitrogen, Phosphorus, Potassium, Temperature, Ph]
+    values = [Nitrogen, Phosphorus, Potassium, Temperature, pH]
     
-    if Ph > 0 and Ph <= 14 and Temperature < 100 :
+    if pH > 0 and pH <= 14 and Temperature < 70 and Temperature> 0:
         best_crop, best_crop_probability, alternative_crops = predict_crops_with_alternatives(values)
         # Passing both the best crop and alternatives to the template
         return render_template('prediction.html', best_crop=best_crop, best_crop_probability=best_crop_probability, alternatives=alternative_crops)
     else:
         return "Sorry... Error in entered values in the form. Please check the values and fill it again."
-
-    
 
 if __name__ == '__main__':
     app.run(debug=True)
