@@ -1,12 +1,12 @@
 #include <SoftwareSerial.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+//#include <Adafruit_GFX.h>
+//#include <Adafruit_SSD1306.h>
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT
 #define OLED_RESET -1
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+//Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 #define RE 8
 #define DE 7
@@ -16,7 +16,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
   const byte phos[] = {};
   const byte pota[] = {};
   byte values[11];
-  SoftwareeSerial mod(2,3);
+  SoftwareSerial mod(2,3);
   
 
 void setup() {
@@ -63,4 +63,77 @@ Serial.println(" mg/kg ");
 delay(2000);
 
 display.clearDisplay();
+
+display.setTextSize(2);
+display.setCursor(0, 5);
+display.print("N: ");
+display.print(val1);
+display.setTextSize(1);
+display.print(" mg/kg");
+
+display.setTextSize(2);
+display.setCursor(0, 25);
+display.print("P: ");
+display.print(val2);
+display.setTextSize(1);
+display.print(" mg/kg");
+
+display.setTextSize(2);
+display.setCursor(0, 45);
+display.print("K: ");
+display.print(val3);
+display.setTextSize(1);
+display.print(" mg/kg");
+
+display.display();
+}
+
+byte nitrogen() {
+  digitalWrite(DE, HIGH);
+  digitalWrite(RE, HIGH);
+  delay(10);
+  if(mod.write(nitro,sizeof(nitro))==8){
+  digitalWrite(DE, LOW);
+  digitalWrite(RE, LOW);
+  for(byte i=0;i<7;i++){
+    values[i] = mod.read();
+    Serial.print(values[i], HEX);
+  }
+  Serial.println();
+}
+return values[4];
+}
+
+byte phosphorus(){
+  digitalWrite(DE, HIGH);
+  digitalWrite(RE, HIGH);
+  delay(10);
+  if(mod.write(phos,sizeof(pota))==8){
+  digitalWrite(DE, LOW);
+  digitalWrite(RE, LOW);
+  for(byte i=0;i<7;i++){
+    values[i] = mod.read();
+    Serial.print(values[i], HEX);
+  }
+  Serial.println();
+}
+return values[4];
+}
+
+byte potassium(){
+  digitalWrite(DE, HIGH);
+  digitalWrite(RE, HIGH);
+  delay(10);
+
+if(mod.write(pota,sizeof(pota))==8){
+  digitalWrite(DE, LOW);
+  digitalWrite(RE, LOW);
+  for(byte i=0;i<7;i++){
+    values[i] = mod.read();
+    Serial.print(values[i], HEX);
+  }
+  Serial.println();
+}
+return values[4];
+}
 }
