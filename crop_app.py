@@ -27,8 +27,8 @@ def home():
     return render_template('Home.html')
 @app.route('/about')
 def about():
-    about_text = """Our system integrates advanced soil analysis techniques with sophisticated crop recommendation algorithms to provide tailored guidance to farmers. By analyzing soil composition, nutrient levels, and environmental factors, we deliver personalized recommendations for crop selection, fertilization, irrigation, and pest management."""
-    return about_text
+    about_text = """Our system integrates advanced soil analysis techniques with sophisticated crop recommendation algorithms to provide tailored guidance to farmers. By analyzing soil composition, nutrient levels, and environmental factors, we deliver personalized recommendations for crop selection."""
+    return render_template('about.html', about_text=about_text)
 
 @app.route('/Help')
 def help():
