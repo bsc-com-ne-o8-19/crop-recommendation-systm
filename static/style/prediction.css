@@ -19,3 +19,6 @@ a {
   margin: 0 auto;
   display: block;
 }
+ul {
+  list-style: none;
+}
