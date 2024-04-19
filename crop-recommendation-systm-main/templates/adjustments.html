@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nutrient Adjustments</title>
+</head>
+<body>
+    <h1>Nutrient Adjustments for {{ crop }}</h1>
+    {% for nutrient, adjustment in adjustments.items() %}
+        <p>{{ nutrient }}: {{ adjustment }}</p>
+    {% endfor %}
+</body>
+</html>

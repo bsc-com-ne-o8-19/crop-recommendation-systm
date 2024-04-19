@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Results</title>
+</head>
+<body>
+    <h1>Recommended Crop</h1>
+    <p>Best Crop: {{ prediction }} - Probability: {{ prediction_probability }}</p>  <!-- Display the probability of the best crop -->
+    <h2>Alternatives</h2>
+    {% for crop, prob in alternatives %}
+    <p>{{ crop }} - Probability: {{ prob }}</p>
+    {% endfor %}
+
+    <h3>Get Nutrient Adjustments for Any Crop</h3>
+    <form action="/adjustments" method="post">
+        <select name="crop_choice">
+            {% for crop in all_crops %}
+            <option value="{{ crop }}">{{ crop }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Get Adjustments</button>
+    </form>
+</body>
+</html>
