@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Prediction Results</title>
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='style/prediction.css')}}"
+    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  </head>
+  <header>
+      <nav>
+       <div class="dropdown">
+          <button class="dropbtn">
+            <span class="material-symbols-outlined">
+              menu
+            </span>
+          </button>
+          <div class="dropdown-content">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="#">Services</a>
+            <a href="/Help">Help</a>
+       </div>
+      </nav>
+     </header>
+  <body>
     <h1>Recommended Crop</h1>
-    <p>Best Crop: {{ prediction }} - Probability: {{ prediction_probability }}</p>  <!-- Display the probability of the best crop -->
+    <p>
+      Best Crop: {{ prediction }} - Probability: {{ prediction_probability }}
+    </p>
+    <!-- Display the probability of the best crop -->
     <h2>Alternatives</h2>
     {% for crop, prob in alternatives %}
     <p>{{ crop }} - Probability: {{ prob }}</p>
@@ -13,12 +37,12 @@
 
     <h3>Get Nutrient Adjustments for Any Crop</h3>
     <form action="/adjustments" method="post">
-        <select name="crop_choice">
-            {% for crop in all_crops %}
-            <option value="{{ crop }}">{{ crop }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Get Adjustments</button>
+      <select name="crop_choice">
+        {% for crop in all_crops %}
+        <option value="{{ crop }}">{{ crop }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Get Adjustments</button>
     </form>
-</body>
+  </body>
 </html>

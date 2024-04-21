@@ -1,9 +1,31 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>adjustments</title>
 <html>
 <head>
     <title>Nutrient Adjustments</title>
 </head>
 <body>
+     <header>
+      <nav>
+       <div class="dropdown">
+          <button class="dropbtn">
+            <span class="material-symbols-outlined">
+              menu
+            </span>
+          </button>
+          <div class="dropdown-content">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="#">Services</a>
+            <a href="/Help">Help</a>
+       </div>
+      </nav>
+     </header>
     <h1>Nutrient Adjustments for {{ crop }}</h1>
     {% for nutrient, adjustment in adjustments.items() %}
         <p>{{ nutrient }}: {{ adjustment }}</p>

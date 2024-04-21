@@ -6,9 +6,27 @@
     <link
       rel="stylesheet"
       href="{{url_for('static', filename='style/predict.css')}}"
-    />
+    /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
   </head>
   <body>
+     <header>
+      <nav>
+       <div class="dropdown">
+          <button class="dropbtn">
+            <span class="material-symbols-outlined">
+              menu
+            </span>
+          </button>
+          <div class="dropdown-content">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="#">Services</a>
+            <a href="/Help">Help</a>
+       </div>
+      </nav>
+     </header>
+
     <main class="predict-background">
       <h1>Predict</h1>
       <form action="/predict" method="POST" class="design" class="input-container">
