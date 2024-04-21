@@ -19,12 +19,12 @@ def predict_crops_with_alternatives(input_features, n_alternatives=2):
     probabilities[best_crop_index] = 0  # Exclude best crop from alternatives
     alternatives_indices = probabilities.argsort()[-n_alternatives:][::-1]  # Indices of the best alternatives
     alternative_crops = [(model.classes_[i], probabilities[i]) for i in alternatives_indices if probabilities[i] > 0]
-    
     return best_crop, best_crop_probability, alternative_crops
 
 @app.route('/')
 def home():
     return render_template('Home.html')
+
 @app.route('/about')
 def about():
     about_text = """Our system integrates advanced soil analysis techniques with sophisticated crop recommendation algorithms to provide tailored guidance to farmers. By analyzing soil composition, nutrient levels, and environmental factors, we deliver personalized recommendations for crop selection."""
