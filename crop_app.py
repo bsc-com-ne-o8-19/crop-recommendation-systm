@@ -19,12 +19,12 @@ def predict_crops_with_alternatives(input_features, n_alternatives=2):
     probabilities[best_crop_index] = 0  # Exclude best crop from alternatives
     alternatives_indices = probabilities.argsort()[-n_alternatives:][::-1]  # Indices of the best alternatives
     alternative_crops = [(model.classes_[i], probabilities[i]) for i in alternatives_indices if probabilities[i] > 0]
+    
     return best_crop, best_crop_probability, alternative_crops
 
 @app.route('/')
 def home():
     return render_template('Home.html')
-
 @app.route('/about')
 def about():
     about_text = """Our system integrates advanced soil analysis techniques with sophisticated crop recommendation algorithms to provide tailored guidance to farmers. By analyzing soil composition, nutrient levels, and environmental factors, we deliver personalized recommendations for crop selection."""
@@ -38,27 +38,51 @@ def help():
     }
     return render_template('Help.html', contact_info=contact_info)
 
-@app.route('/predict')
-def prediction():
-    return render_template('predict.html')
+@app.route('/predict', methods=['GET', 'POST'])
+def predict():
+    if request.method == 'GET':
+        return render_template('predict_form.html')
+    elif request.method == 'POST':
+        if model is None:
+            return "Model is not loaded, cannot perform predictions"
+        
+        try:
+            # Extracting form data
+            Nitrogen = float(request.form['Nitrogen'])
+            Phosphorus = float(request.form['Phosphorus'])
+            Potassium = float(request.form['Potassium'])
+            Temperature = float(request.form['Temperature'])
+            pH = float(request.form['pH'])
 
-@app.route('/form', methods=["POST"])
-def form_handler():
-    # Extract form data
-    Nitrogen = float(request.form['Nitrogen'])
-    Phosphorus = float(request.form['Phosphorus'])
-    Potassium = float(request.form['Potassium'])
-    Temperature = float(request.form['Temperature'])
-    pH = float(request.form['pH'])
-     
-    values = [Nitrogen, Phosphorus, Potassium, Temperature, pH]
-    
-    if pH > 0 and pH <= 14 and Temperature < 70 and Temperature> 0:
-        best_crop, best_crop_probability, alternative_crops = predict_crops_with_alternatives(values)
-        # Passing both the best crop and alternatives to the template
-        return render_template('prediction.html', best_crop=best_crop, best_crop_probability=best_crop_probability, alternatives=alternative_crops)
+            # Predicting crop
+            features = [Nitrogen, Phosphorus, Potassium, Temperature, pH]
+            prediction = model.predict([features])
+            probabilities = model.predict_proba([features])[0]
+            crops = model.classes_
+
+            # Find the index of the best predicted crop to show its probability
+            best_crop_index = numpy.where(crops == prediction[0])[0][0]
+            best_crop_probability = probabilities[best_crop_index]
+
+            # Sort the probabilities and exclude the best crop from alternatives
+            top_indices = probabilities.argsort()[::-1]  # sort indices by highest probability
+            top_indices = [index for index in top_indices if index != best_crop_index]  # remove best crop index
+
+            # Get top 3 alternatives, ensuring we don't include the best crop
+            alternatives = [(crops[i], "{:.2%}".format(probabilities[i])) for i in top_indices[:2]]
+
+            return render_template('predict.html', prediction=prediction[0], prediction_probability="{:.2%}".format(best_crop_probability), alternatives=alternatives, all_crops=crops)
+        except Exception as e:
+            return str(e)
+
+@app.route('/adjustments', methods=['POST'])
+def adjustments():
+    crop = request.form['crop_choice']
+    if crop in nutrient_adjustments:
+        adjustments = nutrient_adjustments[crop]
+        return render_template('adjustments.html', crop=crop, adjustments=adjustments)
     else:
-        return "Sorry... Error in entered values in the form. Please check the values and fill it again."
+        return f"No nutrient adjustment information available for {crop}."
 
 if __name__ == '__main__':
     app.run(debug=True)

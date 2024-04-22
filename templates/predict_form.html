@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Predict</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='style/predict.css')}}"
+    /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  </head>
+  <body>
+     <header>
+      <nav>
+       <div class="dropdown">
+          <button class="dropbtn">
+            <span class="material-symbols-outlined">
+              menu
+            </span>
+          </button>
+          <div class="dropdown-content">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="#">Services</a>
+            <a href="/Help">Help</a>
+       </div>
+      </nav>
+     </header>
+
+    <main class="predict-background">
+      <h1>Predict</h1>
+      <form action="/predict" method="POST" class="design" class="input-container">
+        <p><label for="Nitrogen">Nitrogen</label></p>
+        <div>
+          <input
+            type="text"
+            id="Nitrogen"
+            placeholder="Enter Nitrogen"
+            name="Nitrogen"
+          />
+        </div>
+
+        <p><label for="Phosphorus">Phosphorus</label></p>
+
+        <div>
+          <input
+            type="text"
+            id="Phosphorus"
+            name="Phosphorus"
+            placeholder="Enter Phosphorus"
+          />
+        </div>
+
+        <p><label for="Potassium">Potassium</label></p>
+        <div>
+          <input
+            type="text"
+            id="Potassium"
+            name="Potassium"
+            placeholder="Enter Potassium"
+          />
+        </div>
+
+        <p><label for="Temperature">Temperature</label></p>
+        <div>
+          <input
+            type="text"
+            id="Temperature"
+            name="Temperature"
+            placeholder="Enter Temperature"
+          />
+        </div>
+        <p><label for="pH">pH</label></p>
+        <div>
+          <input type="text" id="pH" name="pH" placeholder="Enter pH" />
+        </div>
+        <input type="submit" class="predict-button" id="Predict" />
+      </form>
+      <br />
+    </main>
+  </body>
+</html>
