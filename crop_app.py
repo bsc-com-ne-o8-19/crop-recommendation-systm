@@ -1,11 +1,17 @@
 import joblib
+import numpy
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
+#loading the model
+model = joblib.load('crop_app','r')
+nutrient_adjustments = {
+    'Wheat': {'Nitrogen': '+20', 'Phosphorus': '+0', 'Potassium': '+10'},
+    'Corn': {'Nitrogen': '+30', 'Phosphorus': '+5', 'Potassium': '+0'},
+}
 
 def predict_crops_with_alternatives(input_features, n_alternatives=2):
-    # Load the trained model
-    model = joblib.load('crop_app','r')
+
     
     # Predict probabilities for each class
     probabilities = model.predict_proba([input_features])[0]
