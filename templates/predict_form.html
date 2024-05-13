@@ -1,35 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
     <title>Predict</title>
     <link
       rel="stylesheet"
-      href="{{url_for('static', filename='style/predict.css')}}"
-    /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-
+      href="{{ url_for('static', filename='style/predict.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
   </head>
   <body>
-     <header>
-      <nav>
-       <div class="dropdown">
-          <button class="dropbtn">
-            <span class="material-symbols-outlined">
-              menu
-            </span>
-          </button>
-          <div class="dropdown-content">
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="#">Services</a>
-            <a href="/Help">Help</a>
-       </div>
-      </nav>
-     </header>
-
     <main class="predict-background">
-      <h1>Predict</h1>
-      <form action="/predict" method="POST" class="design" class="input-container">
+      <form id="prediction-form" class="design" class="input-container">
         <p><label for="Nitrogen">Nitrogen</label></p>
         <div>
           <input
@@ -74,9 +58,39 @@
         <div>
           <input type="text" id="pH" name="pH" placeholder="Enter pH" />
         </div>
-        <input type="submit" class="predict-button" id="Predict" />
+        <button type="submit" class="predict-button" id="predict-button">
+          Predict
+        </button>
       </form>
-      <br />
+
+      <div id="prediction-result"></div>
     </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Intercept prediction form submission
+        $("#prediction-form").submit(function (event) {
+          event.preventDefault();
+
+          // Serialize form data
+          var formData = $(this).serialize();
+
+          // request to flask for predictions
+          $.ajax({
+            type: "POST",
+            url: "/predict",
+            data: formData,
+            success: function (response) {
+              $("#prediction-result").html(response);
+            },
+            error: function (xhr, status, error) {
+              console.error("Error:", error);
+            },
+          });
+        });
+      });
+     
+    </script>
   </body>
 </html>

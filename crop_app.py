@@ -5,6 +5,7 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 #loading the model
 model = joblib.load('crop_app','r')
+
 nutrient_adjustments = {
     'Wheat': {'Nitrogen': '+20', 'Phosphorus': '+0', 'Potassium': '+10'},
     'Corn': {'Nitrogen': '+30', 'Phosphorus': '+5', 'Potassium': '+0'},
