@@ -45,7 +45,7 @@ void loop() {
   //int npk_value = analogRead(NPK_PIN);
 
   // If the temperature is valid
-  if (temperatureC != 0) {
+  if (temperatureC != temperatureC) {
     // Print temperature to serial monitor
     Serial.print("Temperature: ");
     Serial.print(temperatureC);
@@ -60,9 +60,14 @@ void loop() {
     // Print error message if temperature reading failed
     Serial.println("Error: Could not read temperature");
     lcd.clear();
-    lcd.print("Error: Temp");
+    lcd.print("Temp:Error");
   }
-
+   
+   //print soil moisture to LCD
+    lcd.setCursor(0, 1);
+    lcd.print("Moisture: ");
+    lcd.print(soil_moisture);
+    //lcd.print("      ");
   // Print soil moisture to serial monitor
   Serial.print("Soil Moisture: ");
   Serial.println(soil_moisture);
