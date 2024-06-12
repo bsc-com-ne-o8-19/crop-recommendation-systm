@@ -37,102 +37,164 @@
               <a href="#"><i class="fas fa-question-circle"></i>Help</a>
             </li>
           </ul>
-          <div class="social_media">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-          </div>
         </div>
       </div>
     </header>
-    <main>
-      <h1>Soil Analysis And Crop Recommendation System</h1>
-      <p class="welcome-text">
-        Welcome to Soil Analysis And Crop Recommendation System.
-      </p>
-      <p class="about-text"></p>
 
-      <!-- Button to trigger display of prediction form -->
-      <button id="start-analysis-button" class="start-button">
-        Start Soil Analysis
-      </button>
+    <div id="main-content" style="display: none">
+      <main>
+        <h1>Soil Analysis And Crop Recommendation System</h1>
+        <p class="welcome-text">
+          Welcome to Soil Analysis And Crop Recommendation System.
+        </p>
+        <p class="about-text"></p>
 
-      <!-- Prediction form -->
-      <div id="prediction-form-container" style="display: none">
-        <form
-          id="prediction-form"
-          class="design input-container"
-          action="/predict"
-          method="post"
-        >
-          <!-- Include your prediction form fields here -->
-          <p><label for="Nitrogen">Nitrogen</label></p>
-          <div>
-            <input
-              type="text"
-              id="Nitrogen"
-              placeholder="Enter Nitrogen"
-              name="Nitrogen"
-            />
-          </div>
+        <button id="start-analysis-button" class="start-button">
+          Start Soil Analysis
+        </button>
 
-          <p><label for="Phosphorus">Phosphorus</label></p>
-          <div>
-            <input
-              type="text"
-              id="Phosphorus"
-              name="Phosphorus"
-              placeholder="Enter Phosphorus"
-            />
-          </div>
+        <div id="prediction-form-container" style="display: none">
+          <form
+            id="prediction-form"
+            class="design input-container"
+            action="/predict"
+            method="post"
+          >
+            <p><label for="Nitrogen">Nitrogen</label></p>
+            <div>
+              <input
+                type="text"
+                id="Nitrogen"
+                placeholder="Enter Nitrogen"
+                name="Nitrogen"
+              />
+            </div>
 
-          <p><label for="Potassium">Potassium</label></p>
-          <div>
-            <input
-              type="text"
-              id="Potassium"
-              name="Potassium"
-              placeholder="Enter Potassium"
-            />
-          </div>
+            <p><label for="Phosphorus">Phosphorus</label></p>
+            <div>
+              <input
+                type="text"
+                id="Phosphorus"
+                name="Phosphorus"
+                placeholder="Enter Phosphorus"
+              />
+            </div>
 
-          <p><label for="Temperature">Temperature</label></p>
-          <div>
-            <input
-              type="text"
-              id="Temperature"
-              name="Temperature"
-              placeholder="Enter Temperature"
-            />
-          </div>
+            <p><label for="Potassium">Potassium</label></p>
+            <div>
+              <input
+                type="text"
+                id="Potassium"
+                name="Potassium"
+                placeholder="Enter Potassium"
+              />
+            </div>
 
-          <p><label for="pH">pH</label></p>
-          <div>
-            <input type="text" id="pH" name="pH" placeholder="Enter pH" />
-          </div>
+            <p><label for="Temperature">Temperature</label></p>
+            <div>
+              <input
+                type="text"
+                id="Temperature"
+                name="Temperature"
+                placeholder="Enter Temperature"
+              />
+            </div>
 
-          <button type="submit" class="predict-button" id="predict-button">
-            Predict
-          </button>
-        </form>
-      </div>
+            <p><label for="pH">pH</label></p>
+            <div>
+              <input type="text" id="pH" name="pH" placeholder="Enter pH" />
+            </div>
 
-      <!-- Prediction result -->
-      <div id="prediction-result"></div>
-    </main>
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>History</h2>
-        <div id="historyData"></div>
+            <button type="submit" class="predict-button" id="predict-button">
+              Predict
+            </button>
+          </form>
+        </div>
+
+        <div id="prediction-result"></div>
+      </main>
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h2>History</h2>
+          <div id="historyData"></div>
+        </div>
       </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $("#prediction-form-container").hide();
+    <div id="signup-page" style="display: none">
+      <h1>Sign Up</h1>
+      <form id="signup-form">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <button type="submit">Sign Up</button>
+        <p id="error-message"></p>
+      </form>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+    <script type="module">
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyARfKLsqISHQEv3ufLMngyuh5fcx0rEOmA",
+        authDomain: "soil-analysis-crop-reco.firebaseapp.com",
+        projectId: "soil-analysis-crop-reco",
+        storageBucket: "soil-analysis-crop-reco.appspot.com",
+        messagingSenderId: "288273313346",
+        appId: "1:288273313346:web:b1aa248878cc778799c7db",
+      };
+
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check authentication state
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            // User is signed in
+            showMainContent();
+          } else {
+            // User is not signed in, check local storage
+            const isUserNew = localStorage.getItem("isUserNew");
+            if (isUserNew === null) {
+              // Show signup page for new users
+              showSignupPage();
+            } else {
+              // If there's a flag, show main content assuming user has already signed up before
+              showMainContent();
+            }
+          }
+        });
+
+        // Handle signup form submission
+        document
+          .getElementById("signup-form")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            auth
+              .createUserWithEmailAndPassword(email, password)
+              .then((userCredential) => {
+                // User signed up successfully
+                localStorage.setItem("isUserNew", "false");
+                showMainContent();
+              })
+              .catch((error) => {
+                const errorMessage = error.message;
+                document.getElementById("error-message").textContent =
+                  errorMessage;
+              });
+          });
+
+        // jQuery handlers for prediction form
         $("#start-analysis-button").click(function () {
           $(this).hide();
           $("#prediction-form-container").show();
@@ -140,9 +202,7 @@
 
         $("#prediction-form").submit(function (event) {
           event.preventDefault();
-
           var formData = $(this).serialize();
-
           $.ajax({
             type: "POST",
             url: "/predict",
@@ -156,6 +216,16 @@
           });
         });
       });
+
+      function showSignupPage() {
+        document.getElementById("signup-page").style.display = "block";
+        document.getElementById("main-content").style.display = "none";
+      }
+
+      function showMainContent() {
+        document.getElementById("signup-page").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+      }
     </script>
   </body>
 </html>

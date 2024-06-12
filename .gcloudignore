@@ -1,0 +1,75 @@
+# This file specifies files that are _not_ uploaded to Google Cloud
+
+# Python cache files
+
+\*_/**pycache**/
+_.py[cod]
+\*$py.class
+
+# C extensions
+
+\*.so
+
+# Packages
+
+_.egg
+_.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+_.egg-info/
+.installed.cfg
+_.egg-info/
+lib/
+lib64/
+**pycache**/
+
+# Logs and databases
+
+_.log
+_.sql
+\*.sqlite
+
+# OS generated files
+
+.DS_Store
+Thumbs.db
+
+# Testing files and coverage reports
+
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+.coverage._
+.cache/
+nosetests.xml
+coverage.xml
+_.cover
+.hypothesis/
+
+# Version control
+
+.git/
+.gitignore
+.hg/
+.svn/
+
+# Ignore these specific files
+
+setup.cfg
+README.md
+
+# Arduino sketches
+
+\*.ino
+
+# Node modules
+
+node_modules/
+
+# GCP related files
+
+.gcloudignore

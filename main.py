@@ -1,10 +1,10 @@
 import joblib
 import numpy
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session,redirect
 
 app = Flask(__name__)
 #loading the model
-model = joblib.load('crop_app','r')
+model = joblib.load('main','r')
 
 nutrient_adjustments = {
     'Wheat': {'Nitrogen': '+20', 'Phosphorus': '+0', 'Potassium': '+10'},
