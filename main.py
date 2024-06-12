@@ -1,144 +1,158 @@
 import joblib
-import numpy
-from flask import Flask, render_template, request
+import numpy as np
+from flask import Flask, render_template, request, jsonify
 
-# Initialize Flask application
 app = Flask(__name__)
 
-
 try:
-    model = joblib.load('main','r')
+    model_pipeline = joblib.load('main','r')
 except FileNotFoundError:
     print("Model file not found. Please check the file path.")
-    model = None
+    model_pipeline = None
 
-# Load the pre-trained machine learning model
-
-
-# Nutrient adjustments for different crops
-nutrient_adjustments = {
-    'Wheat': {'Nitrogen': '+20', 'Phosphorus': '+0', 'Potassium': '+10'},
-    'Corn': {'Nitrogen': '+30', 'Phosphorus': '+5', 'Potassium': '+0'},
+district_data = {
+    "Chiradzulu": {
+        "humidity": "70",
+        "temperature": "25",
+        "zinc": "2.7",
+        "iron": "60.5",
+        "carbon": "17.2",
+        "magnesium": "180.3",
+        "aluminium": "163",
+        "calcium": "896.8",
+        "depth": "200",
+        "stoniness": "1.7",
+        "rainfall": "387.60"
+    },
+    "Zomba": {
+        "humidity": "60",
+        "temperature": "23.5",
+        "zinc": "1.7",
+        "iron": "80.5",
+        "carbon": "26.3",
+        "magnesium": "199.3",
+        "aluminium": "147.5",
+        "calcium": "811.5",
+        "depth": "200",
+        "stoniness": "1.5",
+        "rainfall": "906"
+    },
+    "Blantyre": {
+        "humidity": "80",
+        "temperature": "27.5",
+        "zinc": "2.3",
+        "iron": "89",
+        "carbon": "29",
+        "magnesium": "243.7",
+        "aluminium": "89",
+        "calcium": "896.8",
+        "depth": "200",
+        "stoniness": "0.3",
+        "rainfall": "834"
+    },
+    "Thyolo": {
+        "humidity": "70",
+        "temperature": "25",
+        "zinc": "2.7",
+        "iron": "60.5",
+        "carbon": "17.2",
+        "magnesium": "180.3",
+        "aluminium": "163",
+        "calcium": "896.8",
+        "depth": "200",
+        "stoniness": "1.7",
+        "rainfall": "387.60"
+    },
+    "Chikwawa": {
+        "humidity": "60",
+        "temperature": "23.5",
+        "zinc": "1.7",
+        "iron": "80.5",
+        "carbon": "26.3",
+        "magnesium": "199.3",
+        "aluminium": "147.5",
+        "calcium": "811.5",
+        "depth": "200",
+        "stoniness": "1.5",
+        "rainfall": "906"
+    }
 }
 
-def predict_crops_with_alternatives(input_features, n_alternatives=2):
-    """
-    Predict the best crop and alternative crops based on input features.
-
-    Args:
-    - input_features (list): List of input features (Nitrogen, Phosphorus, Potassium, Temperature, pH).
-    - n_alternatives (int): Number of alternative crops to return (default is 2).
-
-    Returns:
-    - tuple: Best crop, probability of best crop, list of alternative crops with probabilities.
-    """
-    # Predict probabilities for each class
-    probabilities = model.predict_proba([input_features])[0]
-    
-    # Get the index and probability of the top prediction (best crop)
-    best_crop_index = probabilities.argmax()
-    best_crop = model.classes_[best_crop_index]
-    best_crop_probability = probabilities[best_crop_index]
-    
-    # Exclude the best crop and get the next best alternatives along with their probabilities
-    probabilities[best_crop_index] = 0  # Exclude best crop from alternatives
-    alternatives_indices = probabilities.argsort()[-n_alternatives:][::-1]  # Indices of the best alternatives
-    alternative_crops = [(model.classes_[i], probabilities[i]) for i in alternatives_indices if probabilities[i] > 0]
-    
-    return best_crop, best_crop_probability, alternative_crops
-
-# Define Flask routes
 @app.route('/')
 def home():
-    """
-    Render the home page.
-
-    Returns:
-    - str: HTML content of the home page.
-    """
     return render_template('Home.html')
+
+@app.route('/district-data')
+def get_district_data():
+    return jsonify(district_data)
 
 @app.route('/about')
 def about():
-    """
-    Render the about page.
-
-    Returns:
-    - str: HTML content of the about page.
-    """
     about_text = """Our system integrates advanced soil analysis techniques with sophisticated crop recommendation algorithms to provide tailored guidance to farmers. By analyzing soil composition, nutrient levels, and environmental factors, we deliver personalized recommendations for crop selection."""
     return render_template('about.html', about_text=about_text)
 
 @app.route('/Help')
 def help():
-    """
-    Render the help page with contact information.
-
-    Returns:
-    - str: HTML content of the help page.
-    """
     contact_info = {
         'telephone': '+265881401065',
         'email': 'croprecommendation@gmail.com'
     }
     return render_template('Help.html', contact_info=contact_info)
 
-@app.route('/predict', methods=['GET', 'POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
-    """
-    Handle prediction request.
+    if model_pipeline is None:
+        return "Model is not loaded, cannot perform predictions"
+    
+    try:
+        features = [
+            float(request.form['Nitrogen']),
+            float(request.form['Phosphorus']),
+            float(request.form['Potassium']),
+            float(request.form['Temperature']),
+            float(request.form['humidity']),
+            float(request.form['pH']),
+            float(request.form['rainfall']),
+            float(request.form['ZINC']),
+            float(request.form['IRON']),
+            float(request.form['CARBON']),
+            float(request.form['MAGNESIUM']),
+            float(request.form['ALUMINIUM']),
+            float(request.form['CALCIUM']),
+            float(request.form['DEPTH']),
+            float(request.form['STONINESS'])
+        ]
 
-    If the request method is GET, render the prediction form.
-    If the request method is POST, process the form data, predict the crop,
-    and display the prediction along with alternatives.
+        prediction = model_pipeline.predict([features])
+        probabilities = model_pipeline.predict_proba([features])[0]
+        crops = model_pipeline.classes_
 
-    Returns:
-    - str: HTML content of the prediction result page or error message.
-    """
-    if request.method == 'GET':
-        return render_template('predict_form.html')
-    elif request.method == 'POST':
-        if model is None:
-            return "Model is not loaded, cannot perform predictions"
+        best_crop_index = np.where(crops == prediction[0])[0][0]
+        best_crop_probability = probabilities[best_crop_index]
+
+        top_indices = probabilities.argsort()[::-1]
+        top_indices = [index for index in top_indices if index != best_crop_index]
+
+        alternatives = [(crops[i], "{:.2%}".format(probabilities[i])) for i in top_indices[:2]]
+
+        response_html = f"""
+        <h2>Prediction Results</h2>
+        <p><strong>Best Crop:</strong> {prediction[0]}</p>
+        <p><strong>Probability:</strong> {"{:.2%}".format(best_crop_probability)}</p>
+        """
         
-        try:
-            # Extracting form data
-            Nitrogen = float(request.form['Nitrogen'])
-            Phosphorus = float(request.form['Phosphorus'])
-            Potassium = float(request.form['Potassium'])
-            Temperature = float(request.form['Temperature'])
-            pH = float(request.form['pH'])
+        if alternatives:
+            response_html += "<h3>Alternative Crops</h3><ul>"
+            for alt_crop, alt_prob in alternatives:
+                response_html += f"<li>{alt_crop}: {alt_prob}</li>"
+            response_html += "</ul>"
 
-            # Predicting crop
-            features = [Nitrogen, Phosphorus, Potassium, Temperature, pH]
-            prediction = model.predict([features])
-            probabilities = model.predict_proba([features])[0]
-            crops = model.classes_
-
-            # Find the index of the best predicted crop to show its probability
-            best_crop_index = numpy.where(crops == prediction[0])[0][0]
-            best_crop_probability = probabilities[best_crop_index]
-
-            # Sort the probabilities and exclude the best crop from alternatives
-            top_indices = probabilities.argsort()[::-1]  # sort indices by highest probability
-            top_indices = [index for index in top_indices if index != best_crop_index]  # remove best crop index
-
-            # Get top 3 alternatives, ensuring we don't include the best crop
-            alternatives = [(crops[i], "{:.2%}".format(probabilities[i])) for i in top_indices[:2]]
-
-            # Render prediction results page
-            return render_template('predict.html', prediction=prediction[0], prediction_probability="{:.2%}".format(best_crop_probability), alternatives=alternatives, all_crops=crops)
-        except Exception as e:
-            return str(e)
+        return response_html
+    except Exception as e:
+        return str(e)
 
 @app.route('/adjustments', methods=['POST'])
 def adjustments():
-    """
-    Handle nutrient adjustments request for a specific crop.
-
-    Returns:
-    - str: HTML content displaying nutrient adjustments or error message.
-    """
     crop = request.form['crop_choice']
     if crop in nutrient_adjustments:
         adjustments = nutrient_adjustments[crop]
