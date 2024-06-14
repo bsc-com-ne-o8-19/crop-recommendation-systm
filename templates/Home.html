@@ -1,231 +1,297 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Soil Analysis And Crop Recommendation System</title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style/home.css') }}"
-    />
-  </head>
-  <body>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/home.css') }}" />
+    <style>
+        .parameter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px; /* Decreased space between parameters */
+        }
+
+        .parameter {
+            width: calc(50% - 5px); /* Adjusted width to accommodate gap */
+            box-sizing: border-box;
+            padding: 5px; /* Decreased padding */
+        }
+
+        .parameter label {
+            display: block;
+            margin-bottom: 3px; /* Decreased margin between label and input */
+        }
+
+        .parameter input {
+            width: calc(100% - 10px); /* Adjusted width to account for padding */
+            padding: 5px; /* Decreased padding */
+            font-size: 12px; /* Smaller font size */
+        }
+    </style>
+</head>
+<body>
     <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
 
     <header>
-      <div class="wrapper">
-        <div class="sidebar">
-          <h2></h2>
-          <ul>
-            <li>
-              <a href="#"><i class="fas fa-home"></i>Home</a>
-            </li>
-            <li>
-              <a href="#"><i class="fas fa-address-card"></i>About</a>
-            </li>
-            <li>
-              <a href="#"><i class="fas fa-tools"></i>Services</a>
-            </li>
-            <li>
-              <a href="#" id="showHistoryBtn"
-                ><i class="fas fa-history"></i>History</a
-              >
-            </li>
-            <li>
-              <a href="#"><i class="fas fa-question-circle"></i>Help</a>
-            </li>
-          </ul>
+        <div class="wrapper">
+            <div class="sidebar">
+                <h2></h2>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a href="#"><i class="fas fa-address-card"></i>About</a></li>
+                    <li><a href="#"><i class="fas fa-tools"></i>Services</a></li>
+                    <li><a href="#" id="showHistoryBtn"><i class="fas fa-history"></i>History</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i>Help</a></li>
+                </ul>
+                <div class="social_media">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
         </div>
-      </div>
     </header>
-
-    <div id="main-content" style="display: none">
-      <main>
+    <main>
         <h1>Soil Analysis And Crop Recommendation System</h1>
-        <p class="welcome-text">
-          Welcome to Soil Analysis And Crop Recommendation System.
-        </p>
+        <p class="welcome-text">Welcome to Soil Analysis And Crop Recommendation System.</p>
         <p class="about-text"></p>
 
-        <button id="start-analysis-button" class="start-button">
-          Start Soil Analysis
-        </button>
+        <!-- Button to trigger display of prediction form -->
+        <button id="start-analysis-button" class="start-button">Start Soil Analysis</button>
 
-        <div id="prediction-form-container" style="display: none">
-          <form
-            id="prediction-form"
-            class="design input-container"
-            action="/predict"
-            method="post"
-          >
-            <p><label for="Nitrogen">Nitrogen</label></p>
-            <div>
-              <input
-                type="text"
-                id="Nitrogen"
-                placeholder="Enter Nitrogen"
-                name="Nitrogen"
-              />
-            </div>
+        <!-- Prediction form -->
+        <div id="prediction-form-container" style="display: none;">
+            <form id="prediction-form" class="design input-container" action="/predict" method="post">
+                <label for="district">Select Location:</label>
+                <select id="district" name="district" onchange="populateFields()">
+                    <option value="">--Select Location--</option>
+                    <option value="Chiradzulu">Chiradzulu</option>
+                    <option value="Blantyre">Blantyre</option>
+                    <option value="Thyolo">Thyolo</option>
+                    <option value="Chikwawa">Chikwawa</option>
+                    
+                  
+                    <!-- Add more districts as needed -->
+                </select>
+                <br><br>
 
-            <p><label for="Phosphorus">Phosphorus</label></p>
-            <div>
-              <input
-                type="text"
-                id="Phosphorus"
-                name="Phosphorus"
-                placeholder="Enter Phosphorus"
-              />
-            </div>
+                <div class="parameter-container">
+                    <div class="parameter">
+                        <label for="Nitrogen">Nitrogen</label>
+                        <input type="text" id="Nitrogen" name="Nitrogen" placeholder="N" />
+                    </div>
+                    <div class="parameter">
+                        <label for="Phosphorus">Phosphorus</label>
+                        <input type="text" id="Phosphorus" name="Phosphorus" placeholder="P" />
+                    </div>
+                    <div class="parameter">
+                        <label for="Potassium">Potassium</label>
+                        <input type="text" id="Potassium" name="Potassium" placeholder="K" />
+                    </div>
+                    <div class="parameter">
+                        <label for="Temperature">Temperature</label>
+                        <input type="text" id="Temperature" name="Temperature" placeholder="Temp" readonly />
+                    </div>
+                    <div class="parameter">
+                        <label for="pH">pH</label>
+                        <input type="text" id="pH" name="pH" placeholder="pH" />
+                    </div>
+                    <div class="parameter">
+                        <label for="humidity">Humidity</label>
+                        <input type="text" id="humidity" name="humidity" placeholder="Humidity" readonly />
+                    </div>
+                    <div class="parameter">
+                        <label for="soilTexture">Soil Texture</label>
+                        <input type="text" id="soilTexture" name="soilTexture" placeholder="Soil Texture" readonly />
+                    </div>
+                    <div class="parameter">
+                        <label for="ZINC">ZINC</label>
+                        <input type="text" id="ZINC" name="ZINC" placeholder="ZINC" />
+                    </div>
+                    <div class="parameter">
+                        <label for="IRON">IRON</label>
+                        <input type="text" id="IRON" name="IRON" placeholder="IRON" />
+                    </div>
+                    <div class="parameter">
+                        <label for="CARBON">CARBON</label>
+                        <input type="text" id="CARBON" name="CARBON" placeholder="CARBON" />
+                    </div>
+                    <div class="parameter">
+                        <label for="ALLUMINIUM">ALLUMINIUM</label>
+                        <input type="text" id="ALLUMINIUM" name="ALLUMINIUM" placeholder="ALLUMINIUM" />
+                    </div>
+                    
+                    <div class="parameter">
+                        <label for="CALCIUM">CALCIUM</label>
+                        <input type="text" id="CALCIUM" name="CALCIUM" placeholder="CALCIUM" />
+                    </div>
+                    <div class="parameter">
+                        <label for="DEPTH">DEPTH</label>
+                        <input type="text" id="DEPTH" name="DEPTH" placeholder="DEPTH" />
+                    </div>
+                    <div class="parameter">
+                        <label for="STONNESS">STONNESS</label>
+                        <input type="text" id="STONNESS" name="STONNESS" placeholder="STONNESS" />
+                    </div>
 
-            <p><label for="Potassium">Potassium</label></p>
-            <div>
-              <input
-                type="text"
-                id="Potassium"
-                name="Potassium"
-                placeholder="Enter Potassium"
-              />
-            </div>
+                    <div class="parameter">
+                        <label for="rainfall">Rainfall</label>
+                        <input type="text" id="rainfall" name="rainfall" placeholder="Rainfall" />
+                    </div>
+                </div>
 
-            <p><label for="Temperature">Temperature</label></p>
-            <div>
-              <input
-                type="text"
-                id="Temperature"
-                name="Temperature"
-                placeholder="Enter Temperature"
-              />
-            </div>
-
-            <p><label for="pH">pH</label></p>
-            <div>
-              <input type="text" id="pH" name="pH" placeholder="Enter pH" />
-            </div>
-
-            <button type="submit" class="predict-button" id="predict-button">
-              Predict
-            </button>
-          </form>
+                <button type="submit" class="predict-button" id="predict-button">Predict</button>
+            </form>
         </div>
 
+        <!-- Prediction result -->
         <div id="prediction-result"></div>
-      </main>
-      <div id="myModal" class="modal">
+    </main>
+    <div id="myModal" class="modal">
         <div class="modal-content">
-          <span class="close-button">&times;</span>
-          <h2>History</h2>
-          <div id="historyData"></div>
+            <span class="close-button">&times;</span>
+            <h2>History</h2>
+            <div id="historyData"></div>
         </div>
-      </div>
-    </div>
-
-    <div id="signup-page" style="display: none">
-      <h1>Sign Up</h1>
-      <form id="signup-form">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
-        <button type="submit">Sign Up</button>
-        <p id="error-message"></p>
-      </form>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-    <script type="module">
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyARfKLsqISHQEv3ufLMngyuh5fcx0rEOmA",
-        authDomain: "soil-analysis-crop-reco.firebaseapp.com",
-        projectId: "soil-analysis-crop-reco",
-        storageBucket: "soil-analysis-crop-reco.appspot.com",
-        messagingSenderId: "288273313346",
-        appId: "1:288273313346:web:b1aa248878cc778799c7db",
-      };
-
-      // Initialize Firebase
-      const app = firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-
-      document.addEventListener("DOMContentLoaded", function () {
-        // Check authentication state
-        auth.onAuthStateChanged((user) => {
-          if (user) {
-            // User is signed in
-            showMainContent();
-          } else {
-            // User is not signed in, check local storage
-            const isUserNew = localStorage.getItem("isUserNew");
-            if (isUserNew === null) {
-              // Show signup page for new users
-              showSignupPage();
-            } else {
-              // If there's a flag, show main content assuming user has already signed up before
-              showMainContent();
+    <script>
+        const districtData = {
+            "Chiradzulu": {
+                "humidity": "70", 
+                "temperature": "25", 
+                "soilTexture": "Sandy Loamy",
+                "zinc": "2.7",
+                "iron": "60.5",
+                "carbon": "17.2",
+                "magnesium": "180.3",
+                "aluminium": "163",
+                "calcium": "896.8",
+                "depth": "200",
+                "stoniness": "1.7",
+                "rainfall": "387.60"
+            },
+            "Zomba": {
+                "humidity": "60", 
+                "temperature": "23.5", 
+                "soilTexture": "Sandy Loam",
+                "zinc": "1.7",
+                "iron": "80.5",
+                "carbon": "26.3",
+                "magnesium": "199.3",
+                "aluminium": "147.5",
+                "calcium": "811.5",
+                "depth": "200",
+                "stoniness": "1.5",
+                "rainfall": "906"
+            },
+            "Blantyre": {
+                "humidity": "80", 
+                "temperature": "27.5", 
+                "soilTexture": "Sandy Loam",
+                "zinc": "2.3",
+                "iron": "89",
+                "carbon": "29",
+                "magnesium": "243.7",
+                "aluminium": "89",
+                "calcium": "896.8",
+                "depth": "200",
+                "stoniness": "0.3",
+                "rainfall": "834"
+            },
+            "Thyolo": {
+                "humidity": "70", 
+                "temperature": "25", 
+                "soilTexture": "Sandy Clay Loamy",
+                "zinc": "3.1",
+                "iron": "72.7",
+                "carbon": "23.5",
+                "magnesium": "120.5",
+                "aluminium": "163",
+                "calcium": "664.1",
+                "depth": "200",
+                "stoniness": "3.1",
+                "rainfall": "1125"
+            },
+            "Chikwawa": {
+                "humidity": "28", 
+                "temperature": "27.5", 
+                "soilTexture": "Sandy Clay Loam",
+                "zinc": "3.1",
+                "iron": "80",
+                "carbon": "39.4",
+                "magnesium": "243.7",
+                "aluminium": "53.1",
+                "calcium": "991.3",
+                "depth": "194",
+                "stoniness": "1",
+                "rainfall": "96.78"
+            },
+            "Nsanje": {
+                "humidity": "80", 
+                "temperature": "27.5", 
+                "soilTexture": "Sandy Loam",
+                "zinc": "1.7",
+                "iron": "29",
+                "carbon": "2.3",
+                "magnesium": "11",
+                "aluminium": "0.3",
+                "calcium": "13",
+                "depth": "200",
+                "stoniness": "1.5",
+                "rainfall": "36.1"
             }
-          }
+            // Add more districts and their data here
+        };
+
+        function populateFields() {
+            const selectedDistrict = document.getElementById("district").value;
+            const data = districtData[selectedDistrict] || { 
+                "humidity": "", "temperature": "", "soilTexture": "",
+                "zinc": "", "iron": "", "carbon": "", "magnesium": "",
+                "aluminium": "", "calcium": "", "depth": "", "stoniness": "", "rainfall": ""
+            };
+
+            document.getElementById("humidity").value = data.humidity;
+            document.getElementById("Temperature").value = data.temperature;
+            document.getElementById("soilTexture").value = data.soilTexture;
+            document.getElementById("ZINC").value = data.zinc;
+            document.getElementById("IRON").value = data.iron;
+            document.getElementById("CARBON").value = data.carbon;
+            document.getElementById("ALLUMINIUM").value = data.aluminium;
+            document.getElementById("CALCIUM").value = data.calcium;
+            document.getElementById("DEPTH").value = data.depth;
+            document.getElementById("STONNESS").value = data.stoniness;
+            document.getElementById("rainfall").value = data.rainfall;
+        }
+
+        $(document).ready(function () {
+            $("#prediction-form-container").hide();
+
+            $("#start-analysis-button").click(function () {
+                $(this).hide();
+                $("#prediction-form-container").show();
+            });
+
+            $("#prediction-form").submit(function (event) {
+                event.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/predict",
+                    data: formData,
+                    success: function (response) {
+                        $("#prediction-result").html(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    },
+                });
+            });
         });
-
-        // Handle signup form submission
-        document
-          .getElementById("signup-form")
-          .addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            auth
-              .createUserWithEmailAndPassword(email, password)
-              .then((userCredential) => {
-                // User signed up successfully
-                localStorage.setItem("isUserNew", "false");
-                showMainContent();
-              })
-              .catch((error) => {
-                const errorMessage = error.message;
-                document.getElementById("error-message").textContent =
-                  errorMessage;
-              });
-          });
-
-        // jQuery handlers for prediction form
-        $("#start-analysis-button").click(function () {
-          $(this).hide();
-          $("#prediction-form-container").show();
-        });
-
-        $("#prediction-form").submit(function (event) {
-          event.preventDefault();
-          var formData = $(this).serialize();
-          $.ajax({
-            type: "POST",
-            url: "/predict",
-            data: formData,
-            success: function (response) {
-              $("#prediction-result").html(response);
-            },
-            error: function (xhr, status, error) {
-              console.error("Error:", error);
-            },
-          });
-        });
-      });
-
-      function showSignupPage() {
-        document.getElementById("signup-page").style.display = "block";
-        document.getElementById("main-content").style.display = "none";
-      }
-
-      function showMainContent() {
-        document.getElementById("signup-page").style.display = "none";
-        document.getElementById("main-content").style.display = "block";
-      }
     </script>
-  </body>
+</body>
 </html>
