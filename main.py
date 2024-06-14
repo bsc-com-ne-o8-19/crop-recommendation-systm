@@ -121,7 +121,10 @@ def predict():
             float(request.form['CALCIUM']),
             float(request.form['DEPTH']),
             float(request.form['STONINESS'])
+          
         ]
+        
+         
 
         prediction = model_pipeline.predict([features])
         probabilities = model_pipeline.predict_proba([features])[0]
@@ -135,19 +138,7 @@ def predict():
 
         alternatives = [(crops[i], "{:.2%}".format(probabilities[i])) for i in top_indices[:2]]
 
-        response_html = f"""
-        <h2>Prediction Results</h2>
-        <p><strong>Best Crop:</strong> {prediction[0]}</p>
-        <p><strong>Probability:</strong> {"{:.2%}".format(best_crop_probability)}</p>
-        """
-        
-        if alternatives:
-            response_html += "<h3>Alternative Crops</h3><ul>"
-            for alt_crop, alt_prob in alternatives:
-                response_html += f"<li>{alt_crop}: {alt_prob}</li>"
-            response_html += "</ul>"
-
-        return response_html
+        return render_template('predict.html', prediction=prediction[0], prediction_probability="{:.2%}".format(best_crop_probability), alternatives=alternatives, all_crops=crops)
     except Exception as e:
         return str(e)
 
