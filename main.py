@@ -5,8 +5,15 @@ from flask import Flask, render_template, request
 # Initialize Flask application
 app = Flask(__name__)
 
+
+try:
+    model = joblib.load('main','r')
+except FileNotFoundError:
+    print("Model file not found. Please check the file path.")
+    model = None
+
 # Load the pre-trained machine learning model
-model = joblib.load('main','r')
+
 
 # Nutrient adjustments for different crops
 nutrient_adjustments = {
