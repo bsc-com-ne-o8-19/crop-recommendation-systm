@@ -45,7 +45,8 @@ void loop() {
   //int npk_value = analogRead(NPK_PIN);
 
   // If the temperature is valid
-  if (temperatureC != temperatureC) {
+  if (temperatureC == temperatureC) 
+  if (!isnan(temperatureC)){
     // Print temperature to serial monitor
     Serial.print("Temperature: ");
     Serial.print(temperatureC);
