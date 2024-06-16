@@ -1,19 +1,30 @@
 import joblib
 import numpy
-from flask import Flask, render_template, request, session,redirect
+from flask import Flask, render_template, request
 
+# Initialize Flask application
 app = Flask(__name__)
-#loading the model
+
+# Load the pre-trained machine learning model
 model = joblib.load('main','r')
 
+# Nutrient adjustments for different crops
 nutrient_adjustments = {
     'Wheat': {'Nitrogen': '+20', 'Phosphorus': '+0', 'Potassium': '+10'},
     'Corn': {'Nitrogen': '+30', 'Phosphorus': '+5', 'Potassium': '+0'},
 }
 
 def predict_crops_with_alternatives(input_features, n_alternatives=2):
+    """
+    Predict the best crop and alternative crops based on input features.
 
-    
+    Args:
+    - input_features (list): List of input features (Nitrogen, Phosphorus, Potassium, Temperature, pH).
+    - n_alternatives (int): Number of alternative crops to return (default is 2).
+
+    Returns:
+    - tuple: Best crop, probability of best crop, list of alternative crops with probabilities.
+    """
     # Predict probabilities for each class
     probabilities = model.predict_proba([input_features])[0]
     
@@ -29,16 +40,36 @@ def predict_crops_with_alternatives(input_features, n_alternatives=2):
     
     return best_crop, best_crop_probability, alternative_crops
 
+# Define Flask routes
 @app.route('/')
 def home():
+    """
+    Render the home page.
+
+    Returns:
+    - str: HTML content of the home page.
+    """
     return render_template('Home.html')
+
 @app.route('/about')
 def about():
+    """
+    Render the about page.
+
+    Returns:
+    - str: HTML content of the about page.
+    """
     about_text = """Our system integrates advanced soil analysis techniques with sophisticated crop recommendation algorithms to provide tailored guidance to farmers. By analyzing soil composition, nutrient levels, and environmental factors, we deliver personalized recommendations for crop selection."""
     return render_template('about.html', about_text=about_text)
 
 @app.route('/Help')
 def help():
+    """
+    Render the help page with contact information.
+
+    Returns:
+    - str: HTML content of the help page.
+    """
     contact_info = {
         'telephone': '+265881401065',
         'email': 'croprecommendation@gmail.com'
@@ -47,6 +78,16 @@ def help():
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
+    """
+    Handle prediction request.
+
+    If the request method is GET, render the prediction form.
+    If the request method is POST, process the form data, predict the crop,
+    and display the prediction along with alternatives.
+
+    Returns:
+    - str: HTML content of the prediction result page or error message.
+    """
     if request.method == 'GET':
         return render_template('predict_form.html')
     elif request.method == 'POST':
@@ -78,12 +119,19 @@ def predict():
             # Get top 3 alternatives, ensuring we don't include the best crop
             alternatives = [(crops[i], "{:.2%}".format(probabilities[i])) for i in top_indices[:2]]
 
+            # Render prediction results page
             return render_template('predict.html', prediction=prediction[0], prediction_probability="{:.2%}".format(best_crop_probability), alternatives=alternatives, all_crops=crops)
         except Exception as e:
             return str(e)
 
 @app.route('/adjustments', methods=['POST'])
 def adjustments():
+    """
+    Handle nutrient adjustments request for a specific crop.
+
+    Returns:
+    - str: HTML content displaying nutrient adjustments or error message.
+    """
     crop = request.form['crop_choice']
     if crop in nutrient_adjustments:
         adjustments = nutrient_adjustments[crop]
